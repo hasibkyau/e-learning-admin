@@ -1,0 +1,162 @@
+@import "src/theme/variables";
+@import "src/theme/exports/ng-class";
+
+.container-fluid {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.action-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px auto;
+
+  .right, .left {
+    display: flex;
+    gap: 5px;
+  }
+}
+
+.top-info {
+  width: 100%;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15);
+  transition: 0.3s;
+  padding: 12px 10px;
+
+  h2 {
+    text-align: center;
+    font-size: 18px;
+  }
+
+  p {
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .setting {
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .note {
+    width: 100%;
+    background: #ebe5ff;
+    padding: 8px 8px;
+    margin-top: 5px;
+    border-radius: 8px;
+  }
+
+}
+
+.list-container {
+  width: 100%;
+  margin: 16px auto;
+}
+
+.list-view {
+
+  width: 100%;
+  margin-bottom: 10px;
+
+  .title {
+    padding: 8px 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+
+    h3 {
+      font-weight: 600;
+      color: #373737;
+      font-size: 18px;
+    }
+  }
+
+  .item {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15);
+    transition: 0.3s;
+    padding: 14px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    cursor: all-scroll;
+
+    .left {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+      position: relative;
+
+      .status {
+        position: absolute;
+        padding: 1px 5px;
+        top: -24px;
+        left: -12px;
+        //border-radius: 8px;
+
+        span {
+          font-size: 9px;
+          font-weight: 500;
+          color: #fff;
+        }
+      }
+
+      .txt {
+        font-size: 15px;
+        padding: 0 5px;
+      }
+      .e-time, .a-time {
+        display: flex;
+        flex-direction: row;
+        font-size: 13px;
+        font-weight: 600;
+
+        mat-icon {
+          font-size: 20px;
+        }
+      }
+      .e-time {
+        color: #c50370;
+      }
+      .a-time {
+        color: #028458;
+      }
+    }
+
+    .right {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+    }
+  }
+}
+
+
+@media only screen and (max-width: 599px){
+  .action-btn {
+    flex-direction: column;
+    gap: 5px;
+
+    .right, .left {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  .list-container {
+    padding: 0 10px;
+  }
+  .list-view {
+    .item {
+      width: 680px !important;
+      cursor: pointer;
+    }
+  }
+}
+

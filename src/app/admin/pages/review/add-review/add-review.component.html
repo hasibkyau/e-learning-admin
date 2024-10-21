@@ -1,0 +1,110 @@
+<div class="top-input-header">
+  <div class="title">
+    <h2>{{id ? 'Edit' : 'Add New'}} Review</h2>
+  </div>
+</div> <!-- END Input Form Header -->
+
+
+<form #formElement="ngForm" [formGroup]="dataForm" (ngSubmit)="onSubmit()" fxLayout="row wrap" fxLayoutAlign="center"
+  autocomplete="off">
+
+  <div class="form-img-avatar" (click)="openGalleryDialog()">
+    <img [src]="pickedImage" alt="">
+  </div>
+
+  <div class="form-title w-100">
+    <h2>Review Info</h2>
+    <div class="line" style="width: 100px;"></div>
+  </div> <!-- END Form Title -->
+
+
+  <div formGroupName="user" class="review-user" style="display: block;">
+    <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+      <mat-label>Name</mat-label>
+      <input formControlName="name" matInput placeholder="Enter Name">
+      <mat-error>This field is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+      <mat-label>Designation</mat-label>
+      <input formControlName="designation" matInput placeholder="Enter Name">
+      <mat-error>This field is required</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+      <mat-label>User Name</mat-label>
+      <input formControlName="username" matInput placeholder="Enter User Name">
+      <mat-error>This field is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+      <mat-label>Phone No</mat-label>
+      <input formControlName="phoneNo" matInput placeholder="Enter phone number">
+      <mat-error>This field is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+      <mat-label>Email</mat-label>
+      <input type="email" formControlName="email" matInput placeholder="Enter phone number">
+      <mat-error>This field is required</mat-error>
+    </mat-form-field>
+
+  </div>
+
+  <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+    <mat-label>Course</mat-label>
+    <mat-select formControlName="course" required>
+      <mat-option [value]="data?._id" *ngFor="let data of courses">{{data?.name}}</mat-option>
+    </mat-select>
+    <mat-error>This field is required.</mat-error>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+    <mat-label>Review</mat-label>
+    <textarea formControlName="review" matInput placeholder="Enter description" [rows]="4"></textarea>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+    <mat-label>Rating</mat-label>
+    <input type="number" formControlName="rating" digitOnly matInput placeholder="Enter phone number">
+    <mat-error>This field is required</mat-error>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+    <mat-label>Select Status</mat-label>
+    <mat-select formControlName="status" required>
+      <mat-option [value]="'draft'">Draft</mat-option>
+      <mat-option [value]="'publish'">Publish</mat-option>
+    </mat-select>
+    <mat-error>This field is required.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+    <mat-label>Priority</mat-label>
+    <input type="number" formControlName="priority" digitOnly matInput placeholder="Enter phone number">
+    <mat-error>This field is required</mat-error>
+  </mat-form-field>
+
+
+
+
+  <button mat-raised-button *ngIf="isLoading === false" color="primary"  type="submit" class="btn-submit">
+    {{id ? 'Update Course' : 'Add Course'}}
+  </button>
+  
+  <button mat-raised-button *ngIf="isLoading === true"  color="primary" type="submit" class="btn-submit">
+    <span class="spinner"></span>
+    {{ "Loading..." }}
+  </button>
+
+
+</form>
+
+<!-- LOADING TEMPLATE -->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.12)" size="medium" color="#eb7b0d" type="timer" [fullScreen]="false">
+  <p style="color: #eb7b0d; font-size: 18px; font-weight: 600"> Loading... </p>
+</ngx-spinner>

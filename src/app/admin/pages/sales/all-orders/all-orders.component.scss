@@ -1,0 +1,52 @@
+@import "src/theme/exports/table-scroll2";
+@import "src/theme/exports/search-table2";
+@import "src/theme/exports/top-data-header2";
+@import "src/theme/exports/top-action-multiple2";
+@import "src/theme/exports/ng-class2";
+@import "src/theme/exports/top-basic-info";
+@import "src/theme/exports/dashboard-card";
+.date-multi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.count{
+    display: flex;
+    justify-content: center;
+   flex-direction: column;
+    align-items: center;
+   width: 100%;
+  span{
+    padding: 5px 10px;
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: 800;
+    width: 150px;
+  }
+}
+
+
+.unavailable{
+  font-size: 16px;
+}
+
+.action-multiple{
+  margin-bottom: 25px;
+}
+
+
+.card-number h3 {
+  margin-bottom: 0!important;
+}
+
+.card-body {
+  padding: 10px 20px!important;
+}
+
+.card-top {
+  padding: 5px 15px!important;
+}

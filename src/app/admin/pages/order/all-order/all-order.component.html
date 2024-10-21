@@ -1,0 +1,233 @@
+<section class="admin-data-sec">
+  <div class="top-data-header">
+    <div class="title">
+      <h2>All Orders</h2>
+    </div>
+
+    <form class="table-search" #searchForm=ngForm>
+      <input type="text"
+             #searchInput
+             name="searchTerm"
+             autocomplete="off"
+             ngModel placeholder="Search">
+      <button><i class="fa fa-search"></i></button>
+    </form>
+
+  </div> <!-- END TOP DATA HEADER -->
+
+  <div class="action-multiple">
+
+    <div class="date-filter">
+      <mat-form-field class="mat-date-input-field" appearance="outline" (click)="picker.open()">
+        <mat-label>Filter Created Date Range</mat-label>
+        <mat-date-range-input [formGroup]="dataFormDateRange" [rangePicker]="picker" [max]="today">
+          <input matStartDate formControlName="start" placeholder="Start date" readonly>
+          <input matEndDate formControlName="end" placeholder="End date" readonly
+                 (dateChange)="endChangeRegDateRange($event)">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+
+        <mat-error *ngIf="dataFormDateRange.controls.start.hasError('matStartDateInvalid')">Invalid start date
+        </mat-error>
+        <mat-error *ngIf="dataFormDateRange.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+      </mat-form-field>
+    </div>
+
+
+    <div class="sort">
+      <button mat-raised-button color="primary" [matMenuTriggerFor]="menuSort">
+        Sort By
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #menuSort="matMenu">
+        <button mat-menu-item (click)="sortData({updatedAt: -1}, 1)" [class.dropdown-active]="activeSort === 1">
+          Last Update
+        </button>
+        <button (click)="sortData({name: 1}, 2)" mat-menu-item [class.dropdown-active]="activeSort === 2">
+          A-Z
+        </button>
+      </mat-menu>
+    </div>
+
+    <div class="sort">
+      <button mat-raised-button color="primary" [matMenuTriggerFor]="menuCat">
+
+        {{ paymentStatus[activeFilter1]?.viewValue ? paymentStatus[activeFilter1]?.viewValue : ' Payment Status' }}
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #menuCat="matMenu">
+        <button *ngFor="let data of paymentStatus; let i = index" mat-menu-item
+                (click)="filterData(data.value, i, 'paymentStatus')" [class.dropdown-active]="activeFilter1 === i">
+          {{ data.viewValue }}
+        </button>
+      </mat-menu>
+    </div>
+
+  </div>
+
+  <div class="total" *ngIf="isFilterForPayment" [style.color]="isFilterForPayment === 'paid' ? 'green': 'red'">
+    Total {{ isFilterForPayment === 'paid' ? 'Paid' : (isFilterForPayment === 'free' ? 'Free' : 'Unpaid') }} Order = {{ totalOrders }}
+  </div>
+
+  <hr class="center-square">
+  <div class="order-top">
+    <ul>
+      <li>
+        <a [class.active]="selectedStatus == 'all'" (click)="filterOrderList('all',null)">{{
+            "All" | uppercase
+          }}</a>
+      </li>
+      <li>
+        <a [class.active]="selectedStatus == 'video-course' "
+           (click)="filterOrderList('video-course',{orderType: 'video-course'})">{{
+            "Video Course" | uppercase
+          }}</a>
+      </li>
+      <li>
+        <a [class.active]="selectedStatus == 'live-course'"
+           (click)="filterOrderList('live-course',{orderType: 'live-course'})">{{
+            "Live Course" | uppercase
+          }}</a>
+      </li>
+
+      <li>
+        <a [class.active]="selectedStatus == 'lecture-sheet' "
+           (click)="filterOrderList('lecture-sheet',{orderType: 'lecture-sheet'})">{{
+            "Lecture Sheet" | uppercase
+          }}</a>
+      </li>
+
+      <li>
+        <a [class.active]="selectedStatus == 'partial-payment' "
+           (click)="filterOrderList('partial-payment',{isPartialPaymentOrder: true})">{{
+            "Partial Payment" | uppercase
+          }}</a>
+      </li>
+    </ul>
+  </div>
+
+
+  <div class="table-wrapper space">
+
+    <div class="table-action" [class.dual]="activeSort || filter">
+      <div class="left" *ngIf="activeSort || filter">
+        <button mat-stroked-button color="accent" (click)="onRemoveAllQuery()">
+          <mat-icon>close</mat-icon>
+          Clear FilterData
+        </button>
+      </div>
+
+      <div class="right" *ngIf="selectedIds && selectedIds.length">
+        <button *ngIf="checkEditPermission" mat-stroked-button color="primary" [matMenuTriggerFor]="menu">
+          Change Payment Status
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openConfirmDialog('edit', {paymentStatus: 'paid', orderStatus: 'Delivered'})">Paid</button>
+          <button mat-menu-item (click)="openConfirmDialog('edit', {paymentStatus: 'unpaid', orderStatus: 'Pending'})">Unpaid</button>
+        </mat-menu>
+
+        <button *ngIf="checkDeletePermission" mat-stroked-button color="warn" (click)="openConfirmDialog('delete')"
+                matTooltip="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div> <!-- END Table Action -->
+
+    <table>
+      <tr>
+        <th class="t-checkbox">
+          <mat-checkbox #matCheckbox (change)="onAllSelectChange($event)"></mat-checkbox>
+        </th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Course Name</th>
+        <th *ngIf="selectedStatus === 'live-course' || selectedStatus === 'video-course'">Live Course Code</th>
+        <th *ngIf="selectedStatus === 'live-course' || selectedStatus === 'video-course'">Approve Status</th>
+        <th *ngIf="selectedStatus === 'partial-payment'">Due Amount</th>
+        <th>Order Status</th>
+        <!--          <th>Total Sold</th>-->
+        <th>Payment Status</th>
+        <th>Created At</th>
+        <!--          <th>Actions</th>-->
+      </tr>
+      <tr
+        *ngFor="let data of orders | paginate: { itemsPerPage: ordersPerPage, currentPage: currentPage, totalItems: totalOrders } ; let i = index">
+        <td class="t-checkbox">
+          <mat-checkbox class="t-mat-checkbox" [(ngModel)]="data.select"
+                        (ngModelChange)="onCheckChange($event, i, data._id)"></mat-checkbox>
+        </td>
+        <td>
+          <img checkImageDefault class="table-image" [src]="data && data?.orderItem ? data.orderItem?.image : ''"
+               [alt]="">
+        </td>
+
+        <td>{{ data?.name || "-" }}</td>
+        <td>{{ data?.phoneNo || "-" }}</td>
+        <td>{{ data?.email || "-" }}</td>
+        <td>{{ data?.orderItem?.name || "-" }}</td>
+        <td *ngIf="selectedStatus === 'live-course' || selectedStatus === 'video-course'"
+            style="font-weight: 600; color: #008427">{{ data?.liveCourseCode }}
+        </td>
+
+        <td *ngIf="selectedStatus === 'live-course' || selectedStatus === 'video-course'"
+            style="font-weight: 600; color: #008427">
+<!--          <button class="wait-button" *ngIf="isLoading" type="button">Please wait...</button>-->
+
+          <button class="not-approve"
+            *ngIf="!isLoading && data.approveStatus === 'not-approved'"
+            type="button"
+            (click)="statusChange(data?._id, 'approved')"
+          >
+            Not Approved
+          </button>
+
+          <button class="approve"
+            *ngIf="!isLoading && data.approveStatus === 'approved'"
+            type="button"
+            (click)="statusChange(data?._id, 'not-approved')"
+          >
+           Approved
+          </button>
+        </td>
+
+        <td *ngIf="selectedStatus === 'partial-payment'">{{ data?.grandTotal - data?.paidAmount }} Tk</td>
+        <td>{{ data?.orderStatus || "-" | titlecase }}</td>
+        <!--          <td>{{data?.totalSold || 0}}</td>-->
+        <td
+          [style.color]="data?.paymentStatus === 'paid' ? 'green': 'red'">
+          {{ data?.isFreeOrder ? 'Free' : data?.paymentStatus || "-" | titlecase }}
+        </td>
+        <td>{{ data.checkoutDate | date }}</td>
+        <!--          <td class="td-action">-->
+        <!--            &lt;!&ndash; <button [disabled]="data._id === adminId || !checkEditPermission"-->
+        <!--                    [routerLink]="['../', 'edit-order', data._id]" mat-mini-fab matTooltip="Edit">-->
+        <!--              <mat-icon>edit</mat-icon>-->
+        <!--            </button> &ndash;&gt;-->
+        <!--&lt;!&ndash;            <button style="margin-left: 5px;" mat-mini-fab matTooltip="Clone" color="primary" (click)="openConfirmDialog('clone', data._id)">&ndash;&gt;-->
+        <!--&lt;!&ndash;              <mat-icon>content_copy</mat-icon>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </button>&ndash;&gt;-->
+        <!--          </td>-->
+      </tr>
+    </table>
+  </div>
+
+  <div class="pagination-container">
+    <pagination-controls
+      class="data-pagination"
+      [autoHide]="true"
+      [maxSize]="15"
+      (pageChange)="onPageChanged($event)">
+    </pagination-controls>
+  </div>     <!-- END PAGINATION -->
+
+
+  <!-- LOADING TEMPLATE -->
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.12)" size="medium" color="#eb7b0d" type="timer" [fullScreen]="false">
+    <p style="color: #eb7b0d; font-size: 18px; font-weight: 600"> Loading... </p>
+  </ngx-spinner>
+
+</section>

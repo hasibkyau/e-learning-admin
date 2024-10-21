@@ -1,0 +1,55 @@
+<div class="top-input-header">
+  <div class="title">
+    <h2>{{id ? 'Edit' : 'Add New'}} Tag</h2>
+    <p style="text-align: center"><a href="https://htmlcolorcodes.com/color-picker/" target="_blank">
+        Pick color from picker
+      </a></p>
+  </div>
+  <div class="checkbox">
+    <mat-checkbox [(ngModel)]="autoSlug" (change)="autoGenerateSlug()" color="primary">Auto Slug</mat-checkbox>
+  </div>
+</div> <!-- END Input Form Header -->
+
+
+<form #formElement="ngForm" [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="outline" class="w-100 px-1">
+    <mat-label>Name</mat-label>
+    <input formControlName="name" matInput placeholder="Enter full name" required>
+    <mat-error>This field is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-100 px-1">
+    <mat-label>Slug</mat-label>
+    <input formControlName="slug" matInput placeholder="Enter background color code">
+    <mat-error>This field is required</mat-error>
+  </mat-form-field>
+
+  <div class="from">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option [value]="'publish'">Publish</mat-option>
+        <mat-option [value]="'draft'">Draft</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline" class="w-100 px-1">
+    <mat-label>Priority</mat-label>
+    <input formControlName="priority" digitOnly matInput placeholder="Enter priority code">
+    <mat-error>This field is required</mat-error>
+  </mat-form-field>
+
+
+
+  <button mat-raised-button *ngIf="isLoading === false"  type="submit" class="btn-submit">
+    {{ id ? "Update" : "Submit" }}
+  </button>
+  
+  <button mat-raised-button *ngIf="isLoading === true" type="submit" class="btn-submit">
+    <span class="spinner"></span>
+    {{ "Loading..." }}
+  </button>
+
+</form>

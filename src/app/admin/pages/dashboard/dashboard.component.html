@@ -1,0 +1,162 @@
+<div class="container">
+  <div class="main-overview">
+    <a class="d-card card-one" routerLink="/admin/user/all-user">
+      <div class="d-data">
+        <mat-icon class="base-icon">
+          local_offer
+        </mat-icon>
+        <h3 class="title">{{'Users'}}</h3>
+        <h1 class="value">
+          <mat-icon style="margin-right: 10px; opacity: 0.7">check_circle</mat-icon>
+          {{adminDashboard?.totalUsers ? (adminDashboard?.totalUsers | numMinDigit) : 0}}
+        </h1>
+      </div>
+      <div class="bg-circle">
+        <img src="/assets/svg/ic_circle_view.svg" alt="">
+      </div>
+    </a> <!-- END Card one -->
+
+    <a class="d-card card-two" routerLink="/admin/admin-control/all-admins">
+      <div class="d-data">
+        <mat-icon class="base-icon">
+          pending_actions
+        </mat-icon>
+        <h3 class="title">{{'Admins'}}</h3>
+        <h1 class="value">
+          <mat-icon style="margin-right: 10px; opacity: 0.7">check_circle</mat-icon>
+          {{adminDashboard?.totalAdmins ? (adminDashboard?.totalAdmins | numMinDigit) : 0}}
+        </h1>
+      </div>
+      <div class="bg-circle">
+        <img src="/assets/svg/ic_circle_view.svg" alt="">
+      </div>
+    </a>
+
+    <a class="d-card card-three" routerLink="/admin/course/all-course">
+      <div class="d-data">
+        <mat-icon class="base-icon">
+          group
+        </mat-icon>
+        <h3 class="title">{{'Courses'}}</h3>
+        <h1 class="value">
+          <mat-icon style="margin-right: 10px; opacity: 0.7">check_circle</mat-icon>
+          {{adminDashboard?.totalCourse ? (adminDashboard?.totalCourse | numMinDigit) : 0}}
+        </h1>
+      </div>
+      <div class="bg-circle">
+        <img src="/assets/svg/ic_circle_view.svg" alt="">
+      </div>
+    </a>
+
+    <a class="d-card card-one" routerLink="/admin/course/all-course">
+      <div class="d-data">
+        <mat-icon class="base-icon">
+          local_offer
+        </mat-icon>
+        <h3 class="title">{{'Live Course'}}</h3>
+        <h1 class="value">
+          <mat-icon style="margin-right: 10px; opacity: 0.7">check_circle</mat-icon>
+          {{adminDashboard?.totalLiveCourse ? (adminDashboard?.totalLiveCourse | numMinDigit) : 0}}
+        </h1>
+      </div>
+      <div class="bg-circle">
+        <img src="/assets/svg/ic_circle_view.svg" alt="">
+      </div>
+    </a> <!-- END Card one -->
+
+    <a class="d-card card-two" routerLink="/admin/blog/all-blog">
+      <div class="d-data">
+        <mat-icon class="base-icon">
+          pending_actions
+        </mat-icon>
+        <h3 class="title">{{'Blogs'}}</h3>
+        <h1 class="value">
+          <mat-icon style="margin-right: 10px; opacity: 0.7">check_circle</mat-icon>
+          {{adminDashboard?.totalBlogs ? (adminDashboard?.totalBlogs | numMinDigit) : 0}}
+        </h1>
+      </div>
+      <div class="bg-circle">
+        <img src="/assets/svg/ic_circle_view.svg" alt="">
+      </div>
+    </a>
+
+    <a class="d-card card-three" routerLink="/admin/order/all-order">
+      <div class="d-data">
+        <mat-icon class="base-icon">
+          group
+        </mat-icon>
+        <h3 class="title">{{'Orders'}}</h3>
+        <h1 class="value">
+          <mat-icon style="margin-right: 10px; opacity: 0.7">check_circle</mat-icon>
+          {{adminDashboard?.totalOrders ? (adminDashboard?.totalOrders | numMinDigit) : 0}}
+        </h1>
+      </div>
+      <div class="bg-circle">
+        <img src="/assets/svg/ic_circle_view.svg" alt="">
+      </div>
+    </a>
+
+
+  </div> <!-- END! Main Essential Data View -->
+
+<!--  <div class="other-view ">-->
+<!--    <a class="card-extra border-bg-1" [routerLink]="['../../', 'user', 'all-user']">-->
+<!--      <div class="card-details">-->
+<!--        <h4>Total Employee</h4>-->
+<!--        <span>-->
+<!--          {{adminDashboard?.users ? (adminDashboard?.users | numMinDigit) : 0}}-->
+
+<!--        </span>-->
+<!--      </div>-->
+<!--      <div class="card-icon">-->
+<!--        <span><i class="fa fa-users"></i></span>-->
+<!--      </div>-->
+<!--    </a>-->
+
+<!--    <a class="card-extra border-bg-1" [routerLink]="['../../', 'admin-control', 'all-admins']">-->
+<!--      <div class="card-details">-->
+<!--        <h4>Admins</h4>-->
+<!--        <span>-->
+<!--          {{adminDashboard?.admins ? (adminDashboard?.admins | numMinDigit) : 0}}-->
+<!--        </span>-->
+<!--      </div>-->
+<!--      <div class="card-icon">-->
+<!--        <span><i class="fa fa-hammer"></i></span>-->
+<!--      </div>-->
+<!--    </a>-->
+
+
+<!--    <a class="card-extra border-bg-1" [routerLink]="['../../', 'catalog', 'all-project-category']">-->
+<!--      <div class="card-details">-->
+<!--        <h4>Project Categories</h4>-->
+<!--        <span>-->
+<!--          {{adminDashboard?.projectCategories ? (adminDashboard?.projectCategories | numMinDigit) : 0}}-->
+<!--        </span>-->
+<!--      </div>-->
+<!--      <div class="card-icon">-->
+<!--        <span><i class="fa fa-list"></i></span>-->
+<!--      </div>-->
+<!--    </a>-->
+
+<!--    <a class="card-extra border-bg-1" [routerLink]="['../../', 'user', 'resources']" [queryParams]="{isFree: false}">-->
+<!--      <div class="card-details">-->
+<!--        <h4>Assign Users</h4>-->
+<!--        <span>-->
+<!--          {{adminDashboard?.assignUsers ? (adminDashboard?.assignUsers | numMinDigit) : 0}}-->
+<!--        </span>-->
+<!--      </div>-->
+<!--      <div class="card-icon">-->
+<!--        <span><i class="fa fa-user-circle"></i></span>-->
+<!--      </div>-->
+<!--    </a>-->
+<!--  </div>-->
+
+</div>
+
+
+<!--<app-graph></app-graph>-->
+
+<!-- LOADING TEMPLATE -->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.5)" size="medium" color="#fff" type="ball-atom" [fullScreen]="false">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

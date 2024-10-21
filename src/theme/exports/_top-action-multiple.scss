@@ -1,0 +1,27 @@
+.action-multiple {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 12px;
+
+  .sort {
+    margin-top: 10px;
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .action-multiple {
+    justify-content: center;
+    gap: 5px;
+    margin-top: 0;
+    align-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    text-align: center;
+    .sort {
+      margin-top: 5px;
+    }
+  }
+
+}

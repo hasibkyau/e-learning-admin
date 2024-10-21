@@ -1,0 +1,67 @@
+<div class="dialog-container">
+  <div class="header">
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="content">
+    <!-- in app.component.html -->
+<!--    <ngx-dropzone (change)="onSelect($event)">-->
+<!--      <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label>-->
+<!--      <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">-->
+<!--        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>-->
+<!--      </ngx-dropzone-preview>-->
+<!--    </ngx-dropzone>-->
+
+    <div class="top-view">
+      <mat-form-field appearance="outline" class="mat-select-folder">
+        <mat-label>Select Folder</mat-label>
+        <mat-select [(ngModel)]="selectedFolder" name="food">
+          <mat-option value="Default">Default</mat-option>
+          <mat-option *ngFor="let f of folders" [value]="f.name">
+            {{f.name | titlecase}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="progress" *ngIf="progress">
+      <mat-progress-bar color="accent" [mode]="progress === 100 ? 'indeterminate' : 'determinate'" [value]="progress">
+      </mat-progress-bar>
+    </div>
+
+    <div class="custom-dropzone" ngx-dropzone   (change)="onSelect($event)" accept="video/*" [multiple]="false">
+      <ngx-dropzone-label  *ngIf="!files.length">
+        <div class="label">
+          <h2>Upload or Drug and Drop Video Here</h2>
+        </div>
+      </ngx-dropzone-label>
+
+      <div *ngIf="files.length" class="preview">
+        <div class="img-thumb">
+          <img src="/src/assets/images/png/video-play-white.png" alt="">
+        </div>
+        <div class="desc">
+          <h2>{{ files[0].name }}</h2>
+          <p>{{ files[0].type }}</p>
+        </div>
+        <button mat-icon-button class="close-btn" type="button" (click)="onClearFile($event)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="action">
+      <button type="button" mat-raised-button color="primary" (click)="onUploadImages()">
+        Upload Now
+      </button>
+    </div>
+
+  </div>
+
+  <!-- LOADING TEMPLATE -->
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.5)" size="medium" color="#fff" type="timer" [fullScreen]="false">
+    <p style="color: white"> Uploading... </p>
+  </ngx-spinner>
+
+</div>

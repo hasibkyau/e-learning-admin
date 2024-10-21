@@ -1,0 +1,29 @@
+.capsule-filter {
+  width: 100%;
+  //height: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  button {
+    width: 120px;
+    border-radius: 25px;
+    padding: 0;
+
+    &.done {
+      background: #00cc0d;
+      color: #FFFFFF;
+    }
+    &.pending {
+      background: #d10578;
+      color: #FFFFFF;
+    }
+  }
+
+}
+
+
+
+

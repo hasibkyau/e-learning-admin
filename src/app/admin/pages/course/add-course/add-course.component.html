@@ -1,0 +1,735 @@
+<div class="checkbox" style="padding: 10px 0px 10px 10px;">
+  <mat-checkbox [(ngModel)]="autoSlug" (change)="autoGenerateSlug()" color="primary">Auto Slug</mat-checkbox>
+</div>
+
+<form #formElement="ngForm" [formGroup]="dataForm" (ngSubmit)="onSubmit()" autocomplete="off">
+
+  <div class="top-input">
+    <div class="title" style="margin-bottom: 20px;">
+      <h2>{{ id ? "Edit" : "Add New" }} Course</h2>
+    </div>
+    <div class="action-btn">
+      <button mat-stroked-button color="warn" type="button">Discard</button>
+
+      <!-- <button mat-raised-button color="primary" type="submit">
+        {{ id ? "Update" : "Save"
+        }}{{
+        dataForm.value.status
+        ? " (" + (dataForm.value.status | titlecase) + ")"
+        : ""
+        }}
+      </button> -->
+
+      <button mat-raised-button *ngIf="isLoading === false" color="primary" type="submit" class="btn-submit">
+        {{ id ? "Update" : "Save"
+        }}{{
+        dataForm.value.status
+        ? " (" + (dataForm.value.status | titlecase) + ")"
+        : ""
+        }}
+      </button>
+
+      <button mat-raised-button *ngIf="isLoading === true" color="primary" type="submit" class="btn-submit">
+        <span class="spinner"></span>
+        {{ "Loading..." }}
+      </button>
+
+
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="main">
+      <mat-card class="content-main content-1">
+
+        <div class="title">
+          <h4>Basic Info</h4>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Name</mat-label>
+          <input formControlName="name" matInput placeholder="Enter full name" required />
+          <mat-error>This field is required</mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Slug</mat-label>
+          <input formControlName="slug" matInput required autoSlug />
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Introduction Video Url</mat-label>
+          <input formControlName="introYoutubeVideo" matInput placeholder="Instro Video Url" />
+          <mat-error>This field is required</mat-error>
+        </mat-form-field>
+
+<!--        <mat-form-field appearance="outline" class="w-100">-->
+<!--          <mat-label>Priority</mat-label>-->
+<!--          <input formControlName="priority" type="number" digitOnly decimal="true" matInput />-->
+<!--          <mat-error>This field is required.</mat-error>-->
+<!--        </mat-form-field>-->
+
+        <div class="">
+          <h4>Description</h4>
+          <quill-editor #editor [modules]="modules" [sanitize]="true" classes="additional"
+            formControlName="description"></quill-editor>
+        </div>
+
+      </mat-card>
+
+
+      <mat-card class="content-main content-2">
+        <div class="title">
+          <h4>Media</h4>
+        </div>
+
+        <div style="display: flex; align-items: center;
+        justify-content: center; gap: 20px;flex-wrap: wrap;">
+          <div style="flex-basis: 120px;" class="form-img-avatar" (click)="openGalleryDialog('banner-image')">
+            <img matTooltip="Upload Banner Image" [src]="pickedBannerImage" alt="">
+          </div>
+
+          <div style="flex-basis: 120px;" class="form-img-avatar" (click)="openGalleryDialog('image')">
+            <img matTooltip="Upload  Image" [src]="pickedImage" alt="">
+          </div>
+        </div>
+
+
+      </mat-card>
+
+      <mat-card class="content-main content-2">
+        <div class="title">
+          <h4>Choose Course Type</h4>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Select Type</mat-label>
+          <mat-select formControlName="type" (selectionChange)="onChangeCourseType($event)">
+            <mat-option *ngFor="let data of courseTypes" [value]="data.value">
+              {{ data.viewValue }}
+            </mat-option>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+
+
+      </mat-card>
+
+
+      <mat-card class="content-main content-2" *ngIf="dataForm.get('type').value === 'live-course' || dataForm.get('type').value === 'video-course'">
+        <div class="title">
+          <h4>Live Class Information</h4>
+        </div>
+
+<!--        <div style="margin-top: 15px;" class="group-link">-->
+<!--          <mat-form-field appearance="outline" class="w-100 ">-->
+<!--            <mat-label>Group Link</mat-label>-->
+<!--            <input formControlName="groupLink" matInput placeholder="Enter group link">-->
+<!--            <mat-error>This field is required</mat-error>-->
+<!--          </mat-form-field>-->
+<!--        </div>-->
+
+        <div formArrayName="specifications" class="form-array-input">
+          <div class="single-field"
+               *ngFor="let data of specificationDataArray?.controls; let i = index"
+               [formGroupName]="i">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input formControlName="name"
+                     type="text"
+                     matInput [placeholder]="'Enter Name'">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Url</mat-label>
+              <input formControlName="value"
+                     type="text"
+                     matInput [placeholder]="'Enter Url'">
+            </mat-form-field>
+
+            <button class="btn-form-field-remove" type="button" mat-mini-fab color="warn"
+                    (click)="removeFormArrayField('specifications', i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+
+        </div>
+        <div class="add-form-array-action">
+          <button type="button" mat-raised-button color="primary"
+                  (click)="onAddNewSpecifications('specifications')">
+            <mat-icon>add</mat-icon>
+            Create New Group Link
+          </button>
+        </div>
+
+      </mat-card>
+
+      <mat-card class="content-main content-4">
+
+        <div class="title">
+          <h4>Price</h4>
+        </div>
+
+        <div class="check-box" style="margin-top: 10px;" *ngIf="dataForm.get('type')?.value === 'video-course'">
+          <mat-checkbox formControlName="isMultiplePrice" color="primary">Is Multiple Price?</mat-checkbox>
+        </div>
+
+        <div class="input-area" fxLayout="row wrap" style="display: block; margin-top: 10px;"
+          *ngIf="!dataForm.get('isMultiplePrice')?.value">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Price </mat-label>
+            <input formControlName="salePrice" matInput placeholder="Enter sale price" type="number" digitOnly
+              decimal="true" />
+            <mat-error>This field is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Discount Type</mat-label>
+            <mat-select formControlName="discountType">
+              <mat-option> none</mat-option>
+              <mat-option *ngFor="let data of discountTypes" [value]="data.value">
+                {{ data.viewValue }}
+              </mat-option>
+            </mat-select>
+            <mat-error>This field is required.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Discount Amount</mat-label>
+            <input formControlName="discountAmount" matInput placeholder="Enter discount amount" type="number"
+              pattern="^\d+(\.\d{1,2})?$" digitOnly [decimal]="true" />
+            <mat-error>This field is required</mat-error>
+          </mat-form-field>
+
+        </div>
+
+      </mat-card>
+
+
+
+      <mat-card class="content-main content-3" cdkDropListGroup *ngIf="dataForm.get('isMultiplePrice')?.value">
+        <div class="title">
+          <h4>Unit</h4>
+        </div>
+        <div formArrayName="prices" class="price-input-area" cdkDropList (cdkDropListDropped)="dropItem($event)">
+
+          <div class="price-unit-card" *ngFor="let data of priceDataArray?.controls;let i = index" [formGroupName]="i"
+            cdkDrag>
+            <div class="heading" style="margin-bottom: 20px;">
+              <h4>{{selectedUnitTypes[i].name}}</h4>
+            </div>
+
+            <div class="top-input-view" fxLayout="row wrap">
+<!--              <mat-form-field appearance="outline" fxFlex="50">-->
+<!--                <mat-label>Cost Price</mat-label>-->
+<!--                <input matInput placeholder="costPrice" type="number" formControlName="costPrice" digitOnly-->
+<!--                  decimal="true">-->
+<!--                <mat-error></mat-error>-->
+<!--              </mat-form-field>-->
+
+              <mat-form-field appearance="outline" fxFlex="50">
+                <mat-label>Price</mat-label>
+                <input matInput type="number" formControlName="salePrice" digitOnly placeholder="price" decimal="true">
+                <mat-error></mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex="50">
+                <mat-label>Discount Type</mat-label>
+                <mat-select formControlName="discountType">
+                  <mat-option [value]="null">None</mat-option>
+                  <mat-option *ngFor="let discount of discountTypes"
+                    [value]="discount.value">{{discount.viewValue}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+
+              <mat-form-field appearance="outline" fxFlex="50">
+                <mat-label>Discount Amount</mat-label>
+                <input [readonly]="!dataForm.value.prices[i].discountType" matInput placeholder="price" type="number"
+                  formControlName="discountAmount" digitOnly decimal="true">
+                <mat-error></mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex="50">
+                <mat-label>Duration</mat-label>
+                <input readonly matInput placeholder="quantity" type="number" formControlName="duration">
+                <mat-error></mat-error>
+              </mat-form-field>
+
+            </div>
+
+            <div class="bottom-action-view">
+              <button type="button" mat-mini-fab color="warn" (click)="removeFormArrayField('prices', i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100 ">
+          <mat-label>Unit</mat-label>
+          <mat-select (selectionChange)="onSelectUnit($event)">
+            <mat-option *ngFor="let data of unitTypes" [value]="data">
+              {{data.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+
+
+
+      </mat-card>
+
+      <mat-card class="content-main content-2">
+        <div class="title">
+          <h4>Learning Scopes</h4>
+        </div>
+
+
+        <div class="form-array-container">
+          <div formArrayName="learningScopes" class="form-array-input">
+            <div class="single-field" *ngFor="let data of learningScopesDataArray?.controls; let i = index">
+
+              <mat-form-field appearance="outline">
+                <mat-label>Learning Scope Value {{i + 1}}</mat-label>
+                <input [formControlName]="i" matInput [placeholder]="'Enter learning Scope ' + i + 1">
+              </mat-form-field>
+              <button type="button" mat-mini-fab color="warn" (click)="removeFormArrayField('learningScopes', i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="add-form-array-action">
+            <button type="button" mat-raised-button color="accent" (click)="onAddNewFormString('learningScopes')">
+              <mat-icon>add</mat-icon>
+              Add New Learning Scope
+            </button>
+
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="content-main content-2">
+        <div class="title">
+          <h4>Benefits</h4>
+        </div>
+
+
+        <div class="form-array-container">
+          <div formArrayName="benefits" class="form-array-input">
+            <div class="single-field" *ngFor="let data of benefitsDataArray?.controls; let i = index">
+
+              <mat-form-field appearance="outline">
+                <mat-label>Benefit Value {{i + 1}}</mat-label>
+                <input [formControlName]="i" matInput [placeholder]="'Enter benefit ' + i + 1">
+              </mat-form-field>
+              <button type="button" mat-mini-fab color="warn" (click)="removeFormArrayField('benefits', i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="add-form-array-action">
+            <button type="button" mat-raised-button color="accent" (click)="onAddNewFormString('benefits')">
+              <mat-icon>add</mat-icon>
+              Add New Benefit
+            </button>
+
+          </div>
+        </div> <!-- END benefits FORM ARRAY -->
+      </mat-card>
+
+      <mat-card class="content-main content-2">
+        <div class="title">
+          <h4>Opportunities</h4>
+        </div>
+        <div class="form-array-container">
+          <div formArrayName="opportunities" class="form-array-input">
+            <div class="single-field" *ngFor="let data of opportunitiesDataArray?.controls; let i = index">
+
+              <mat-form-field appearance="outline">
+                <mat-label>Opportunity Value {{i + 1}}</mat-label>
+                <input [formControlName]="i" matInput [placeholder]="'Enter Opportunity ' + i + 1">
+              </mat-form-field>
+              <button type="button" mat-mini-fab color="warn" (click)="removeFormArrayField('opportunities', i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="add-form-array-action">
+            <button type="button" mat-raised-button color="accent" (click)="onAddNewFormString('opportunities')">
+              <mat-icon>add</mat-icon>
+              Add New Opportunity
+            </button>
+
+          </div>
+        </div> <!-- END benefits FORM ARRAY -->
+
+
+      </mat-card>
+
+
+      <mat-card class="content-main content-2">
+        <div class="title module-title">
+          <h4 >Course Modules</h4>
+        </div>
+
+        <div class="form-array-container w-100 ">
+          <div formArrayName="courseModules" class="form-array-input">
+            <div class="form-field-card" *ngFor="let data of courseModulesDataArray?.controls; let i = index"
+              [formGroupName]="i" fxLayout="row wrap" fxLayoutAlign="center">
+
+              <mat-form-field appearance="outline" class="w-100 ">
+                <mat-label>Name</mat-label>
+                <input formControlName="name" matInput placeholder="Enter name">
+                <mat-error>This field is required</mat-error>
+              </mat-form-field>
+
+
+              <mat-form-field appearance="outline" class="w-100 ">
+                <mat-label>Description</mat-label>
+                <textarea formControlName="description" matInput placeholder="Enter description" [rows]="4"></textarea>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100 " *ngIf="dataForm.get('type').value === 'video-course'">
+                <mat-label>Video Url</mat-label>
+                <input formControlName="video" matInput placeholder="Enter your video url">
+                <mat-error>This field is required</mat-error>
+              </mat-form-field>
+
+
+              <!--              <div style="flex-basis: 120px;" class="form-pdf-avatar" (click)="openGalleryPdfDialog('pdf')">-->
+              <!--                <button matTooltip="Upload  Image" alt="">{{pickedPdf}}</button>-->
+              <!--              </div>-->
+
+
+              <div class="file-pic w-100">
+                <p>File Attached</p>
+                <div class="add-form-array-action">
+                  <button type="button" mat-button class="light-button" (click)="openGalleryPdfDialog(i)">
+                    <mat-icon>attach_file</mat-icon>
+                    Add File (Max 5 MB)
+                  </button>
+
+                  <div *ngIf="dataForm.value.courseModules[i].attachment" style="flex-basis: 120px; margin-top: 10px"
+                    class="form-pdf-avatar">
+<!--                    <iframe matTooltip="{{dataForm.value.courseModules[i].attachment.name}}"-->
+<!--                      [src]="dataForm.value.courseModules[i].attachment | safeUrl "></iframe>-->
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 100px" viewBox="0 0 100 100">
+                      <path fill="#D9434D" d="m88.943 44.394-6.863-5.073h-.07v-12.67h-.004L60.009 5.126l-.01.011H17.972v34.216l-6.916 5.226V73.209H17.972v21.666H82.01V73.208H88.926V64.27l.017-19.876zm-55.27 21.553V53.318h4.265c.864 0 1.611.103 2.241.305.63.204 1.147.486 1.554.85.406.362.706.793.9 1.293.195.498.292 1.041.292 1.627 0 .621-.101 1.189-.305 1.707a3.482 3.482 0 0 1-.923 1.33c-.412.371-.931.66-1.558.865-.626.207-1.36.311-2.202.311h-1.654v4.343l-2.61-.002zm11.493 0V53.318h4.856c.969 0 1.851.156 2.646.471.795.313 1.477.75 2.041 1.311s1.004 1.226 1.314 1.998c.311.771.465 1.614.465 2.532 0 .922-.154 1.771-.465 2.545a5.831 5.831 0 0 1-1.314 1.998 6.005 6.005 0 0 1-2.041 1.306c-.795.313-1.677.47-2.646.47l-4.856-.002zm21.867-10.583h-5.414v3.489h4.544v2.055h-4.544v5.039h-2.628V53.318h8.042v2.046zM56.915 8.221l-.021 21.486 22.031.025V44.41h-57.87V8.221h35.86zM78.926 91.79H21.055V73.208h57.871V91.79z"/><path fill="#D9434D" d="M53.547 61.422c.176-.527.262-1.125.262-1.792 0-.662-.086-1.257-.262-1.785a3.768 3.768 0 0 0-.748-1.34 3.273 3.273 0 0 0-1.188-.845c-.467-.198-.996-.296-1.588-.296h-2.228v8.538h2.228c.592 0 1.122-.098 1.588-.293a3.167 3.167 0 0 0 1.188-.844c.325-.367.574-.815.748-1.343zm-13.812-2.411c.38-.395.57-.934.57-1.618 0-.313-.047-.599-.143-.856a1.706 1.706 0 0 0-.436-.662 1.957 1.957 0 0 0-.735-.422 3.333 3.333 0 0 0-1.053-.147h-1.654v4.299h1.654c.818-.001 1.417-.2 1.797-.594z"/></svg>
+                  </div>
+                </div>
+
+                <mat-form-field appearance="outline" class="w-100 ">
+                  <mat-label>File Url (If more than 5Mb)</mat-label>
+                  <input formControlName="attachment" matInput placeholder="Enter attachment url">
+                  <mat-error>This field is required</mat-error>
+                </mat-form-field>
+
+              </div>
+
+<!--              <mat-form-field appearance="outline" class="w-100 ">-->
+<!--                <mat-label>Quiz</mat-label>-->
+<!--                <mat-select formControlName="quiz">-->
+<!--                  <mat-option *ngFor="let data of quizs" [value]="data">{{data.name}}</mat-option>-->
+<!--                </mat-select>-->
+<!--                <mat-error>This field is required.</mat-error>-->
+<!--              </mat-form-field>-->
+
+              <mat-form-field appearance="outline" class="w-100 px-1">
+                <mat-label>Quiz</mat-label>
+                <mat-select placeholder="Select quiz" formControlName="quiz">
+                  <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'" [array]="quizs" (filteredReturn)="filteredQuiz =$event"></mat-select-filter>
+                  <mat-option *ngFor="let data of filteredQuiz" [value]="data">
+                    {{data.name}}
+                  </mat-option>
+                </mat-select>
+                <mat-error>This field is required.</mat-error>
+              </mat-form-field>
+
+
+              <mat-form-field appearance="outline" class="w-100 ">
+                <mat-label>Is Free?</mat-label>
+                <mat-select formControlName="isFree">
+                  <mat-option *ngFor="let data of dataBooleans" [value]="data.value">
+                    {{data.viewValue}}
+                  </mat-option>
+                </mat-select>
+                <mat-error>This field is required.</mat-error>
+              </mat-form-field>
+
+
+<!--              <mat-form-field appearance="outline" class="w-100 " *ngIf="dataForm.get('isLiveClass').value === false">-->
+<!--                <mat-label>Select Type</mat-label>-->
+<!--                <mat-select formControlName="type">-->
+<!--                  <mat-option [value]="'youtube'">Youtube</mat-option>-->
+<!--                </mat-select>-->
+<!--                <mat-error>This field is required.</mat-error>-->
+<!--              </mat-form-field>-->
+
+
+
+
+
+              <button type="button" mat-mini-fab color="warn" (click)="removeFormArrayField('courseModules', i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="add-form-array-action">
+            <button type="button" mat-raised-button color="primary" (click)="addFormArrayObject('courseModules')">
+              <mat-icon>add</mat-icon>
+              Add New Course Module
+            </button>
+
+          </div>
+
+
+        </div>
+
+
+      </mat-card>
+
+
+      <mat-card class="content-main content-2">
+        <div class="title">
+          <h4>Additional Information</h4>
+        </div>
+        <!-- END Form Title -->
+        <mat-form-field appearance="outline" class="w-100 ">
+          <mat-label>Total Duration</mat-label>
+          <input formControlName="totalDuration" matInput placeholder="Enter total duration">
+          <mat-error>This field is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100 ">
+          <mat-label>Total Users</mat-label>
+          <input formControlName="totalUsers" matInput type="number" digitOnly decimal="true"
+            placeholder="Enter total users">
+          <mat-error>This field is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100 ">
+          <mat-label>Total Exam</mat-label>
+          <input formControlName="totalExam" type="number" digitOnly decimal="true" matInput
+            placeholder="Enter total exam">
+          <mat-error>This field is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100 ">
+          <mat-label>Total Class</mat-label>
+          <input formControlName="totalClass" type="number" digitOnly matInput placeholder="Enter total class">
+          <mat-error>This field is required</mat-error>
+        </mat-form-field>
+      </mat-card>
+
+
+      <mat-card class="content-main content-4">
+
+        <div class="title">
+          <h4>Others</h4>
+        </div>
+
+        <div class="check-box" style="margin-top: 10px;">
+          <mat-checkbox formControlName="canSaleAttachment" color="primary">Can Sale Attachment?</mat-checkbox>
+        </div>
+
+        <div class="input-area" fxLayout="row wrap" style="display: block; margin-top: 10px;"
+          *ngIf="dataForm.get('canSaleAttachment').value === true">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Attachment Price </mat-label>
+            <input formControlName="attachmentSalePrice" matInput placeholder="Enter sale price" type="number" digitOnly
+              decimal="true" />
+            <mat-error>This field is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Attachment Discount Type</mat-label>
+            <mat-select formControlName="attachmentDiscountType">
+              <mat-option> none</mat-option>
+              <mat-option *ngFor="let data of discountTypes" [value]="data.value">
+                {{ data.viewValue }}
+              </mat-option>
+            </mat-select>
+            <mat-error>This field is required.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Attachment Discount Amount</mat-label>
+            <input formControlName="attachmentDiscountAmount" matInput placeholder="Enter discount amount" type="number"
+              pattern="^\d+(\.\d{1,2})?$" digitOnly [decimal]="true" />
+            <mat-error>This field is required</mat-error>
+          </mat-form-field>
+
+        </div>
+
+      </mat-card>
+
+
+
+
+      <mat-card class="content-main content-5">
+        <div class="title">
+          <h4>SEO</h4>
+        </div>
+
+        <div class="input-area" fxLayout="row wrap">
+          <mat-form-field appearance="outline" class="w-100 ">
+            <mat-label>Title</mat-label>
+            <input formControlName="seoTitle" matInput placeholder="Enter seo title">
+            <mat-error>This field is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100 ">
+            <mat-label>Keywords</mat-label>
+            <input formControlName="seoKeywords" matInput placeholder="Enter seo keywords with comma">
+            <mat-error>This field is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea formControlName="seoDescription" matInput placeholder="Enter seo description"
+              [rows]="6"></textarea>
+          </mat-form-field>
+
+        </div>
+
+      </mat-card>
+
+
+    </div>
+
+
+    <div class="sidebar">
+      <mat-card class="content-sidebar content-sidebar-0">
+        <div class="title">
+          <h4>Status</h4>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Select Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option [value]="'draft'">Draft</mat-option>
+            <mat-option [value]="'publish'">Publish</mat-option>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+      </mat-card>
+      <!-- END CONTENT SIDEBAR 2 -->
+
+      <mat-card class="content-sidebar content-sidebar-0">
+        <div class="title">
+          <h4>Is Featured Course?</h4>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Select is featured</mat-label>
+          <mat-select formControlName="isFeatured">
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+      </mat-card>
+      <!-- END CONTENT SIDEBAR 2 -->
+
+      <mat-card class="content-sidebar content-sidebar-1">
+        <div class="title">
+          <h4>Catalog</h4>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100 ">
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="category" (selectionChange)="onSelectionChange($event)">
+            <mat-option *ngFor="let data of categories" [value]="data._id">
+              {{data.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" class="w-100 ">
+          <mat-label>Sub Category</mat-label>
+          <mat-select formControlName="subCategory" (selectionChange)="onSelectionChange2($event)">
+            <mat-option *ngFor="let data of subCategories" [value]="data._id">
+              {{data.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100 ">
+          <mat-label>Child Category</mat-label>
+          <mat-select formControlName="childCategory">
+            <mat-option *ngFor="let data of childCategories" [value]="data._id">
+              {{data.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+
+<!--        <mat-form-field appearance="outline" class="w-100 ">-->
+<!--          <mat-label>Instructor</mat-label>-->
+<!--          <mat-select formControlName="instructor">-->
+<!--            <mat-option *ngFor="let data of instructors" [value]="data._id">-->
+<!--              {{data.name}}-->
+<!--            </mat-option>-->
+<!--          </mat-select>-->
+<!--          <mat-error>This field is required.</mat-error>-->
+<!--        </mat-form-field>-->
+
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Instructor</mat-label>
+          <mat-select placeholder="Select Instructor" formControlName="instructor" multiple>
+            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'" [array]="instructors" (filteredReturn)="filteredInstructors =$event"></mat-select-filter>
+            <mat-option *ngFor="let data of filteredInstructors" [value]="data._id">
+              {{data.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+
+
+      </mat-card>
+      <!-- END CONTENT SIDEBAR 1 -->
+
+      <mat-card class="content-sidebar content-sidebar-2">
+        <div class="title">
+          <h4>Tag</h4>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Select Tags</mat-label>
+          <mat-select formControlName="tag">
+            <mat-option *ngFor="let data of tags" [value]="data._id">
+              {{ data.name }}
+            </mat-option>
+          </mat-select>
+<!--          <mat-error>This field is required.</mat-error>-->
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Total Sold </mat-label>
+          <input formControlName="totalSold" matInput placeholder="Enter totalSold" type="number" digitOnly/>
+          <mat-error>This field is required</mat-error>
+        </mat-form-field>
+
+
+      </mat-card>
+      <!-- END CONTENT SIDEBAR 2 -->
+
+    </div>
+    <!-- END! SIDE AREA -->
+  </div>
+
+</form>
+
+<!-- LOADING TEMPLATE -->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.12)" size="medium" color="#eb7b0d" type="timer" [fullScreen]="false">
+  <p style="color: #eb7b0d; font-size: 18px; font-weight: 600"> Loading... </p>
+</ngx-spinner>

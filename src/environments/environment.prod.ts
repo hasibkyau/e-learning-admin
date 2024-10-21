@@ -1,0 +1,20 @@
+export const environment = {
+  production: true,
+  name: 'admin.test.com.bd',
+  domain: 'https://test.com.bd',
+  apiBaseLink: 'https://api.test.com.bd',
+  ftpBaseLink: 'https://ftp.test.com.bd',
+  ftpPrefix: '',
+  appBaseUrl: '/',
+  userBaseUrl: '',
+  userProfileUrl: '/my-profile',
+  userLoginUrl: 'login',
+  adminLoginUrl: 'admin/login',
+  adminBaseUrl: 'admin',
+  accountantBaseUrl: 'account',
+  storageSecret: 'test',
+  adminTokenSecret: 'test',
+  userTokenSecret: 'test',
+  apiTokenSecret: 'test',
+  VERSION: 2
+};

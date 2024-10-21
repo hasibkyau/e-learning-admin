@@ -1,0 +1,26 @@
+@import "src/theme/exports/top-input-header";
+
+.dialog-container {
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 0;
+  top: -10px;
+}
+
+form {
+  width: 100%;
+  //margin: 16px auto;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  button[type="submit"] {
+    padding: 4px 24px;
+    border-radius: 25px;
+  }
+}
+

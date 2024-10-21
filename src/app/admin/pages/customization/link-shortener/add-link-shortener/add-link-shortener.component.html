@@ -1,0 +1,55 @@
+<section class="add-list" style="padding: 0px 15px;">
+    <div class="page-header">
+      <div class="page-title">
+        <h4>Link Shortener {{ id ? "Update" : "Add" }}</h4>
+      </div>
+      <!-- <div class="checkbox">
+        <mat-checkbox [(ngModel)]="autoSlug" (change)="autoGenerateSlug()" color="primary">Auto Slug</mat-checkbox>
+      </div> -->
+    </div>
+  </section>
+
+  <section class="from-section" style="padding:0px 15px;">
+    <div class="grid">
+    <form #formElement="ngForm" [formGroup]="dataForm" (ngSubmit)="onSubmit()" class="area-border">
+
+      <div class="from">
+        <mat-label>Main Url</mat-label>
+        <mat-form-field appearance="outline">
+          <input formControlName="url" matInput required/>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="from">
+        <mat-label>Short Url</mat-label>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="fixed">
+            <input formControlName="websiteUrl" matInput readonly/>
+            <mat-error>This field is required.</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <input formControlName="slug" matInput autoSlug/>
+            <mat-error>This field is required.</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="btn">
+
+        <button mat-raised-button *ngIf="isLoading === false"  type="submit" class="btn-submit">
+          {{ id ? "Update & Copy" : "Submit & Copy" }}
+        </button>
+
+        <button mat-raised-button *ngIf="isLoading === true" type="submit" class="btn-submit">
+          <span class="spinner"></span>
+          {{ "Loading..." }}
+        </button>
+
+        <button type="button" [routerLink]="['/admin/customization/all-link-shortener']" mat-raised-button class="btn-submit color">
+          Cancel
+        </button>
+      </div>
+    </form>
+    </div>
+  </section>

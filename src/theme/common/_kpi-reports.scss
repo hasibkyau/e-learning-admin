@@ -1,0 +1,59 @@
+@import "src/theme/exports/top-data-header";
+@import "src/theme/exports/top-action-multiple";
+@import "src/theme/common/task";
+@import "src/theme/common/top-basic-info";
+
+
+.clear-filter {
+  width: 100%;
+  max-width: 1050px;
+  margin: 5px auto;
+}
+
+
+.main-area {
+  width: 100%;
+  max-width: 1050px;
+  margin: 16px auto;
+}
+
+.task-view {
+  width: 100%;
+  //border: 2px solid #cecece;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border-radius: 10px;
+  padding: 16px;
+
+  .task-info {
+    width: 100%;
+    background: #ffe4c9;
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: #592c00;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 32px;
+
+    .left {
+      h1 {
+        font-size: 34px;
+        font-weight: 700;
+      }
+    }
+
+    h2 {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: 13px;
+    }
+  }
+}
+
+.pagination-container {
+  margin: 16px 0;
+}

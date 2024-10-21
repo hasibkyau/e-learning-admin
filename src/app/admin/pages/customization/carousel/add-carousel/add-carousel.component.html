@@ -1,0 +1,98 @@
+<section class="add-list" style="padding: 0px 15px;">
+    <div class="page-header">
+      <div class="page-title">
+        <h4>Carousel {{ id ? "Update" : "Add" }}</h4>
+      </div>
+      <!-- <div class="checkbox">
+        <mat-checkbox [(ngModel)]="autoSlug" (change)="autoGenerateSlug()" color="primary">Auto Slug</mat-checkbox>
+      </div> -->
+    </div>
+  </section>
+
+  <section class="from-section" style="padding:0px 15px;">
+    <div class="grid">
+    <form #formElement="ngForm" [formGroup]="dataForm" (ngSubmit)="onSubmit()" class="area-border">
+
+      <div class="form-img-avatar">
+        <img matTooltip="Upload Carousel Image" (click)="openGalleryDialog('image')" [src]="pickedImage" alt="">
+      </div>
+
+      <div class="from">
+        <mat-label>Title</mat-label>
+        <mat-form-field appearance="outline">
+          <input formControlName="name" matInput required/>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="from">
+        <mat-label>Carousel Type</mat-label>
+        <mat-form-field appearance="outline" >
+          <mat-select formControlName="type" required>
+            <mat-option [value]="'home_carousel'">Home Page Carousel</mat-option>
+            <mat-option [value]="'contact_carousel'">Contact Page Carousel</mat-option>
+            <mat-option [value]="'blog_carousel'">Blog Page Carousel</mat-option>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="from">
+        <mat-label>Url</mat-label>
+        <mat-form-field appearance="outline">
+          <input formControlName="url" matInput/>
+        </mat-form-field>
+      </div>
+
+      <div class="from">
+        <mat-label>Url Type</mat-label>
+        <mat-form-field appearance="outline" >
+          <mat-select formControlName="urlType">
+            <mat-option [value]="'internal'">Internal</mat-option>
+            <mat-option [value]="'external'">External</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+
+ 
+
+      
+      <div class="from">
+        <mat-label>Status</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select formControlName="status">
+            <mat-option [value]="'publish'">Publish</mat-option>
+            <mat-option [value]="'draft'">Draft</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="from">
+        <mat-label>Priority</mat-label>
+        <mat-form-field appearance="outline">
+          <input type="number" formControlName="priority" digitOnly matInput placeholder="Ex:123456789" />
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <div class="btn">
+        
+        <button mat-raised-button *ngIf="isLoading === false"  type="submit" class="btn-submit">
+          {{ id ? "Update" : "Submit" }}
+        </button>
+        
+        <button mat-raised-button *ngIf="isLoading === true" type="submit" class="btn-submit">
+          <span class="spinner"></span>
+          {{ "Loading..." }}
+        </button>
+
+        <button type="button" [routerLink]="['../']" mat-raised-button class="btn-submit color">
+          Cancel
+        </button>
+      </div>
+    </form>
+    </div>
+  </section>

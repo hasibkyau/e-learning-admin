@@ -1,0 +1,26 @@
+@import "src/theme/base";
+@import "src/theme/material/theme";
+@import "src/theme/fonts";
+@import "src/theme/mixins";
+
+// Font Awesome
+@import "~@fortawesome/fontawesome-free/css/all.css";
+
+@import "~quill/dist/quill.bubble.css";
+@import "~quill/dist/quill.snow.css";
+
+@import '~swiper/swiper-bundle.min.css';
+
+
+
+.t-info{
+    max-width: 300px!important;
+    width: 100%!important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: wrap;
+    margin-inline:  auto!important;
+}

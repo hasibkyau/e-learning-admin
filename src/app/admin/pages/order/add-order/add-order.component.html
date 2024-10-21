@@ -1,0 +1,78 @@
+<div *ngIf="!isAddedOrder; else addedOrder">
+  <div class="top-input-header">
+    <div class="title">
+      <h2>Add Order For:</h2>
+      <p *ngIf="user?.name">Name: {{user?.name}}</p>
+      <p>Phone No: {{user?.phone}}</p>
+      <p>Username: {{user?.username}}</p>
+      <h4 *ngIf="selectedCourseData">Selected Course Amount: {{selectedCourseData?.isMultiplePrice ? (selectedPriceData | price: 'salePrice') : (selectedCourseData | price: 'salePrice')}}</h4>
+    </div>
+  </div> <!-- END Input Form Header -->
+
+
+  <form #formElement="ngForm" [formGroup]="dataForm" (ngSubmit)="onSubmit()" fxLayout="row wrap" fxLayoutAlign="center"
+        autocomplete="off">
+
+    <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+      <mat-label>Course</mat-label>
+      <mat-select formControlName="course" required (selectionChange)="onCourseSelect($event)">
+        <mat-option [value]="data?._id" *ngFor="let data of courses">{{data?.name}}</mat-option>
+      </mat-select>
+      <mat-error>This field is required.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100" *ngIf="selectedCourseData && selectedCourseData.isMultiplePrice">
+      <mat-label>Price For</mat-label>
+      <mat-select formControlName="unit" required (selectionChange)="onPriceSelect($event)">
+        <mat-option [value]="data._id" *ngFor="let data of selectedCourseData?.prices">{{data?.name}}</mat-option>
+      </mat-select>
+      <mat-error>This field is required.</mat-error>
+    </mat-form-field>
+
+    <div class="checkbox" style="display: flex; flex-direction: column">
+      <mat-checkbox (change)="onPartialOrderCheckChange($event)" formControlName="isPartialPaymentOrder" color="primary">Has partial payment in this order?</mat-checkbox>
+      <mat-checkbox (change)="onFreeOrderCheckChange($event)" formControlName="isFreeOrder" color="primary">Is free order?</mat-checkbox>
+    </div>
+
+    <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100" *ngIf="dataForm.value.isPartialPaymentOrder">
+      <mat-label>Partial amount</mat-label>
+      <input type="number" formControlName="partialAmount" digitOnly matInput placeholder="Enter paid amount">
+      <mat-error>This field is required</mat-error>
+    </mat-form-field>
+
+
+    <button mat-raised-button color="primary" type="submit">
+      Add Order
+    </button>
+
+  </form>
+
+  <!-- LOADING TEMPLATE -->
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.12)" size="medium" color="#eb7b0d" type="timer" [fullScreen]="false">
+    <p style="color: #eb7b0d; font-size: 18px; font-weight: 600"> Loading... </p>
+  </ngx-spinner>
+
+</div>
+
+<ng-template #addedOrder>
+  <div class="congrs-dialog">
+    <div class="congrs-dialog-main">
+      <span><i class="fa fa-check"></i></span>
+      <h3>
+        Success!
+        <img src="/assets/images/gif/Animation - 1699870896890 (1).gif" alt="">
+      </h3>
+      <p>User order created successfully</p>
+      <ul>
+        <li>
+          <button [cdkCopyToClipboard]="domainUrl + '/partial-payment/' + order_id" (cdkCopyToClipboardCopied)="onCopyUrl($event)">Copy Link</button>
+        </li>
+        <li>
+          <button routerLink="/admin/order/all-order">Back to Order</button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+</ng-template>

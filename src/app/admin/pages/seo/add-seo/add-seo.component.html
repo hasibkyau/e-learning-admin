@@ -1,0 +1,67 @@
+<div class="top-input-header">
+  <div class="title">
+    <h2>{{id ? 'Edit' : 'Add New'}} Seo</h2>
+  </div>
+</div> <!-- END Input Form Header -->
+
+
+<form #formElement="ngForm" [formGroup]="dataForm" (ngSubmit)="onSubmit()" fxLayout="row wrap" fxLayoutAlign="center" autocomplete="off">
+
+  <div class="form-img-avatar" (click)="openGalleryDialog()">
+    <img [src]="pickedImage" alt="">
+  </div>
+
+  <div class="form-title w-100">
+    <h2>Basic Info</h2>
+    <div class="line" style="width: 100px;"></div>
+  </div> <!-- END Form Title -->
+
+
+  <mat-form-field appearance="outline" class="w-100 px-1" >
+    <mat-label>Page Name</mat-label>
+    <mat-select formControlName="pageName">
+      <mat-option *ngFor="let data of pageName" [value]="data.value" >
+        {{data.viewValue}}
+      </mat-option>
+    </mat-select>
+    <mat-error>This field is required.</mat-error>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+    <mat-label>Seo Title</mat-label>
+    <input formControlName="title" matInput placeholder="Enter Seo Title" required>
+    <mat-error>This field is required</mat-error>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+    <mat-label>Seo Description</mat-label>
+    <textarea formControlName="description" matInput placeholder="Enter Seo description" [rows]="4"></textarea>
+    <mat-error>This field is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-100 px-1" fxFlex="100">
+    <mat-label>Seo Keywords</mat-label>
+    <textarea formControlName="keywords" matInput placeholder="Enter Seo keywords" [rows]="4"></textarea>
+  </mat-form-field>
+
+
+
+  <button mat-raised-button *ngIf="isLoading === false"  color="primary" type="submit" class="btn-submit">
+    {{id ? 'Update Course' : 'Add Course'}}
+  </button>
+  
+  <button mat-raised-button *ngIf="isLoading === true" type="submit" class="btn-submit">
+    <span class="spinner"></span>
+    {{ "Loading..." }}
+  </button>
+
+</form>
+
+<!-- LOADING TEMPLATE -->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.12)" size="medium" color="#eb7b0d" type="timer" [fullScreen]="false">
+  <p style="color: #eb7b0d; font-size: 18px; font-weight: 600"> Loading... </p>
+</ngx-spinner>
+
+
